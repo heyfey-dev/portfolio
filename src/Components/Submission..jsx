@@ -8,7 +8,7 @@ const Submissions = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/submissions");
+        const response = await axios.get("https://portfolio-backend-3vft.onrender.com/api/submissions");
         setSubmissions(response.data);
       } catch (error) {
         console.error("Error fetching submissions:", error);
@@ -17,7 +17,7 @@ const Submissions = () => {
     fetchSubmissions();
 
     // Set up socket connection
-    const socketConnection = io("http://localhost:5000");
+    const socketConnection = io("https://portfolio-backend-3vft.onrender.com");
 
     // Listen for new submissions and update the state
     socketConnection.on("newSubmission", (newSubmission) => {
