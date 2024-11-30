@@ -4,35 +4,45 @@ import io from "socket.io-client";
 
 const Submissions = () => {
   const [submissions, setSubmissions] = useState([]);
-  const [loading, setLoading] = useState(true); // For loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
         const response = await axios.get("https://portfolio-backend-3vft.onrender.com/api/submissions");
+        console.log("Fetched submissions:", response.data);
         setSubmissions(response.data);
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching submissions:", error);
-        setLoading(false); // Set loading to false even if there's an error
+        setLoading(false);
       }
     };
 
     fetchSubmissions();
 
-    // Set up socket connection
     const socketConnection = io("https://portfolio-backend-3vft.onrender.com");
 
-    // Listen for new submissions and update the state
     socketConnection.on("newSubmission", (newSubmission) => {
       setSubmissions((prevSubmissions) => [...prevSubmissions, newSubmission]);
     });
 
-    // Cleanup socket connection on component unmount
     return () => {
       socketConnection.disconnect();
     };
   }, []);
+
+  const handleDelete = async (submissionId) => {
+    try {
+      // Sending DELETE request to backend
+      await axios.delete(`https://portfolio-backend-3vft.onrender.com/api/submissions/${submissionId}`);
+      // Update the state to remove the deleted submission
+      setSubmissions((prevSubmissions) => prevSubmissions.filter(submission => submission._id !== submissionId));
+      console.log("Submission deleted:", submissionId);
+    } catch (error) {
+      console.error("Error deleting submission:", error);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -51,12 +61,13 @@ const Submissions = () => {
               <th className="px-6 py-3 text-left text-sm font-medium">Date of Birth</th>
               <th className="px-6 py-3 text-left text-sm font-medium">Department</th>
               <th className="px-6 py-3 text-left text-sm font-medium">Comments</th>
+              <th className="px-6 py-3 text-left text-sm font-medium">Actions</th> {/* Add Actions column */}
             </tr>
           </thead>
           <tbody className="bg-white">
             {submissions.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center py-4">No submissions available</td>
+                <td colSpan="6" className="text-center py-4">No submissions available</td>
               </tr>
             ) : (
               submissions.map((submission) => (
@@ -68,6 +79,15 @@ const Submissions = () => {
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">{submission.department}</td>
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">{submission.comments}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    {/* Add delete button */}
+                    <button
+                      className="text-red-600 hover:text-red-800"
+                      onClick={() => handleDelete(submission._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
