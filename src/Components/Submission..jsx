@@ -82,7 +82,7 @@ const Submissions = () => {
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
                     {/* Add delete button */}
                     <button
-                      className="text-red-600 hover:text-red-800"
+                      className="text-red hover:text-red-800"
                       onClick={() => handleDelete(submission._id)}
                     >
                       Delete
