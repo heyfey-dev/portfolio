@@ -128,10 +128,11 @@ const Form = () => {
             Submit
           </button>
 
-          <Link to="/submissions" className="text-blue-500 hover:underline">
+         
+        </div>
+        <Link to="/submission" className="text-blue hover:underline text-center">
             View Submissions
           </Link>
-        </div>
       </form>
     </div>
   );
