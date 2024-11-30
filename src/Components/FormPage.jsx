@@ -1,5 +1,6 @@
 import  { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Form = () => {
   const [formData, setFormData] = useState({
@@ -126,6 +127,10 @@ const Form = () => {
           >
             Submit
           </button>
+
+          <Link to="/submissions" className="text-blue-500 hover:underline">
+            View Submissions
+          </Link>
         </div>
       </form>
     </div>
