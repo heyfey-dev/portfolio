@@ -33,16 +33,16 @@ const Submissions = () => {
   }, []);
 
   const handleDelete = async (submissionId) => {
+    console.log("Attempting to delete submission with ID:", submissionId); // Log the ID
     try {
-      // Sending DELETE request to backend
       await axios.delete(`https://portfolio-backend-3vft.onrender.com/api/submissions/${submissionId}`);
-      // Update the state to remove the deleted submission
       setSubmissions((prevSubmissions) => prevSubmissions.filter(submission => submission._id !== submissionId));
       console.log("Submission deleted:", submissionId);
     } catch (error) {
       console.error("Error deleting submission:", error);
     }
   };
+  
 
   if (loading) {
     return <div>Loading...</div>;
